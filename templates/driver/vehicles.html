@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% from "components/forms.html" import render_field %}
+{% block title %}Veículos · Carona Alegre{% endblock %}
+{% block content %}
+<div class="page-heading mb-4">
+  <span class="eyebrow">Garagem</span>
+  <h1 class="display-6 fw-bold">Meus veículos</h1>
+  <p class="text-secondary">Cadastre e gerencie os veículos usados nas caronas.</p>
+</div>
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="card border-0 shadow-sm rounded-4 sticky-lg-top form-sticky">
+      <div class="card-body p-4">
+        <h2 class="h4 fw-bold mb-3">Cadastrar veículo</h2>
+        <form method="post" novalidate>
+          {{ form.hidden_tag() }}
+          {{ render_field(form.marca, 'Ex.: Fiat') }}
+          {{ render_field(form.modelo, 'Ex.: Argo') }}
+          <div class="row">
+            <div class="col-6">{{ render_field(form.cor, 'Prata') }}</div>
+            <div class="col-6">{{ render_field(form.ano, '2024') }}</div>
+          </div>
+          {{ render_field(form.placa, 'ABC1D23', 'plate-mask') }}
+          {{ render_field(form.capacidade, '4') }}
+          {{ form.submit(class="btn btn-primary w-100") }}
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+      <div class="card-header bg-white p-4 border-0 d-flex justify-content-between align-items-center">
+        <h2 class="h4 fw-bold mb-0">Veículos cadastrados</h2>
+        <span class="badge text-bg-light">{{ veiculos|length }} veículo(s)</span>
+      </div>
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead><tr><th>Veículo</th><th>Placa</th><th>Ano</th><th>Lugares</th><th>Status</th><th class="text-end">Ações</th></tr></thead>
+          <tbody>
+          {% for veiculo in veiculos %}
+            <tr>
+              <td><strong>{{ veiculo.marca }} {{ veiculo.modelo }}</strong><div class="small text-secondary">{{ veiculo.cor }}</div></td>
+              <td><span class="plate-chip">{{ veiculo.placa }}</span></td>
+              <td>{{ veiculo.ano }}</td>
+              <td>{{ veiculo.capacidade }}</td>
+              <td><span class="badge {{ 'text-bg-success' if veiculo.ativo else 'text-bg-secondary' }}">{{ 'Ativo' if veiculo.ativo else 'Inativo' }}</span></td>
+              <td class="text-end text-nowrap">
+                <a class="btn btn-sm btn-outline-primary" href="{{ url_for('driver.edit_vehicle', vehicle_id=veiculo.id_veiculo) }}" title="Editar"><i class="bi bi-pencil"></i></a>
+                <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteVehicle{{ veiculo.id_veiculo }}" title="Excluir"><i class="bi bi-trash"></i></button>
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="6" class="text-center py-5 text-secondary">Nenhum veículo cadastrado.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% for veiculo in veiculos %}
+<div class="modal fade" id="deleteVehicle{{ veiculo.id_veiculo }}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header border-0"><h2 class="modal-title h5">Excluir veículo?</h2><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">Confirma a exclusão de <strong>{{ veiculo.descricao }}</strong>? Veículos vinculados a caronas futuras não podem ser excluídos.</div>
+      <div class="modal-footer border-0">
+        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <form method="post" action="{{ url_for('driver.remove_vehicle', vehicle_id=veiculo.id_veiculo) }}">
+          {{ action_form.hidden_tag() }}
+          <button class="btn btn-danger" type="submit">Excluir</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}

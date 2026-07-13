@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% from "components/forms.html" import render_field, render_select %}
+{% block title %}Criar Carona · Carona Alegre{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="page-heading mb-4">
+      <span class="eyebrow">Novo trajeto</span>
+      <h1 class="display-6 fw-bold">Criar carona</h1>
+      <p class="text-secondary">Informe os dados da viagem e disponibilize as vagas.</p>
+    </div>
+    <div class="card border-0 shadow-sm rounded-4">
+      <div class="card-body p-4 p-lg-5">
+        <form method="post" novalidate>
+          {{ form.hidden_tag() }}
+          <div class="row g-1">
+            <div class="col-md-6">{{ render_field(form.origem, 'Ex.: Centro de Alegre') }}</div>
+            <div class="col-md-6">{{ render_field(form.destino, 'Ex.: UFES - Campus Alegre') }}</div>
+            <div class="col-md-4">{{ render_field(form.data) }}</div>
+            <div class="col-md-4">{{ render_field(form.horario) }}</div>
+            <div class="col-md-4">{{ render_field(form.numero_vagas) }}</div>
+            <div class="col-12">{{ render_select(form.veiculo) }}</div>
+          </div>
+          <div class="d-flex gap-2 mt-3">
+            {{ form.submit(class="btn btn-primary px-4") }}
+            <a class="btn btn-outline-secondary" href="{{ url_for('driver.home') }}">Cancelar</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

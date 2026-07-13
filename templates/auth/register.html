@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% from "components/forms.html" import render_field, render_select %}
+{% block title %}Cadastro · Carona Alegre{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-xl-9">
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+      <div class="row g-0">
+        <div class="col-md-4 register-side p-4 p-lg-5 text-white">
+          <i class="bi bi-people-fill display-4"></i>
+          <h1 class="h2 fw-bold mt-4">Crie sua conta</h1>
+          <p class="text-white-50">Escolha como deseja usar o sistema e comece a compartilhar trajetos.</p>
+          <ul class="list-unstyled small mt-4">
+            <li class="mb-2"><i class="bi bi-check-circle me-2"></i>Cadastro seguro</li>
+            <li class="mb-2"><i class="bi bi-check-circle me-2"></i>Solicitações em tempo real</li>
+            <li><i class="bi bi-check-circle me-2"></i>Controle de vagas</li>
+          </ul>
+        </div>
+        <div class="col-md-8 p-4 p-lg-5">
+          <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="row">
+              <div class="col-12">{{ render_field(form.nome, 'Nome e sobrenome') }}</div>
+              <div class="col-md-6">{{ render_field(form.email, 'nome@exemplo.com') }}</div>
+              <div class="col-md-6">{{ render_field(form.cpf, '000.000.000-00', 'cpf-mask') }}</div>
+              <div class="col-md-6">{{ render_field(form.telefone, '(00) 00000-0000', 'phone-mask') }}</div>
+              <div class="col-md-6">{{ render_select(form.tipo) }}</div>
+              <div class="col-md-6">{{ render_field(form.senha, 'Mínimo 8 caracteres') }}</div>
+              <div class="col-md-6">{{ render_field(form.confirmar_senha, 'Repita a senha') }}</div>
+            </div>
+            <div class="d-flex flex-column flex-sm-row gap-3 align-items-sm-center mt-2">
+              {{ form.submit(class="btn btn-primary btn-lg px-4") }}
+              <a href="{{ url_for('auth.login') }}" class="btn btn-link text-decoration-none">Já tenho uma conta</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

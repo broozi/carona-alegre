@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Minhas Caronas · Carona Alegre{% endblock %}
+{% block content %}
+<div class="page-heading d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+  <div>
+    <span class="eyebrow">Painel do motorista</span>
+    <h1 class="display-6 fw-bold mb-1">Minhas caronas</h1>
+    <p class="text-secondary mb-0">Acompanhe trajetos, vagas e solicitações recebidas.</p>
+  </div>
+  <a class="btn btn-primary btn-lg" href="{{ url_for('driver.create_ride_view') }}"><i class="bi bi-plus-lg me-2"></i>Criar carona</a>
+</div>
+
+{% if caronas %}
+<div class="row g-4">
+  {% for carona in caronas %}
+  <div class="col-md-6 col-xl-4">
+    <a href="{{ url_for('driver.offers', ride_id=carona.id_carona) }}" class="text-decoration-none text-reset">
+      <article class="card ride-card h-100 border-0 shadow-sm">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <span class="status-badge status-{{ carona.status_exibicao|lower }}">{{ carona.status_exibicao }}</span>
+            <span class="text-secondary small"><i class="bi bi-calendar3 me-1"></i>{{ carona.data_saida|data_br }}</span>
+          </div>
+          <div class="route-line mb-4">
+            <div class="route-point origin"><span></span><div><small>Origem</small><strong>{{ carona.trecho.origem.nome_local }}</strong></div></div>
+            <div class="route-point destination"><span></span><div><small>Destino</small><strong>{{ carona.trecho.destino.nome_local }}</strong></div></div>
+          </div>
+          <div class="row g-3 ride-meta">
+            <div class="col-6"><i class="bi bi-clock"></i><span>{{ carona.horario_saida|hora_br }}</span></div>
+            <div class="col-6"><i class="bi bi-people"></i><span>{{ carona.vagas_restantes }}/{{ carona.numero_vagas }} vagas</span></div>
+            <div class="col-12"><i class="bi bi-car-front"></i><span>{{ carona.veiculo.descricao }}</span></div>
+          </div>
+        </div>
+        <div class="card-footer bg-transparent border-0 px-4 pb-4 pt-0 text-primary fw-semibold">Ver solicitações <i class="bi bi-arrow-right ms-1"></i></div>
+      </article>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state card border-0 shadow-sm text-center p-5">
+  <i class="bi bi-signpost-split"></i>
+  <h2 class="h4 mt-3">Nenhuma carona criada</h2>
+  <p class="text-secondary">Cadastre um veículo e publique seu primeiro trajeto.</p>
+  <div><a href="{{ url_for('driver.create_ride_view') }}" class="btn btn-primary">Criar primeira carona</a></div>
+</div>
+{% endif %}
+{% endblock %}

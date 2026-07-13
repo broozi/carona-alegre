@@ -1,0 +1,23 @@
+{% macro render_field(field, placeholder='', extra_class='') %}
+  <div class="mb-3">
+    {{ field.label(class="form-label fw-semibold") }}
+    {{ field(class="form-control " ~ extra_class ~ (" is-invalid" if field.errors else ""), placeholder=placeholder) }}
+    {% if field.errors %}
+      <div class="invalid-feedback">
+        {% for error in field.errors %}{{ error }}{% if not loop.last %}<br>{% endif %}{% endfor %}
+      </div>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro render_select(field, extra_class='') %}
+  <div class="mb-3">
+    {{ field.label(class="form-label fw-semibold") }}
+    {{ field(class="form-select " ~ extra_class ~ (" is-invalid" if field.errors else "")) }}
+    {% if field.errors %}
+      <div class="invalid-feedback">
+        {% for error in field.errors %}{{ error }}{% if not loop.last %}<br>{% endif %}{% endfor %}
+      </div>
+    {% endif %}
+  </div>
+{% endmacro %}

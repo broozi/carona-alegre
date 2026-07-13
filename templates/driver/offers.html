@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Solicitações · Carona Alegre{% endblock %}
+{% block content %}
+<div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
+  <div><span class="eyebrow">Solicitações da carona</span><h1 class="display-6 fw-bold">{{ carona.trecho.origem.nome_local }} <i class="bi bi-arrow-right"></i> {{ carona.trecho.destino.nome_local }}</h1><p class="text-secondary mb-0">{{ carona.data_saida|data_br }} às {{ carona.horario_saida|hora_br }} · {{ carona.vagas_restantes }} vaga(s) restante(s)</p></div>
+  <a class="btn btn-outline-secondary align-self-start" href="{{ url_for('driver.home') }}"><i class="bi bi-arrow-left me-1"></i>Voltar</a>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+  <div class="card-header bg-white border-0 p-4"><h2 class="h4 fw-bold mb-0">Solicitações pendentes <span class="badge text-bg-warning ms-2">{{ pendentes|length }}</span></h2></div>
+  <div class="list-group list-group-flush">
+    {% for oferta in pendentes %}
+    <div class="list-group-item p-4">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div class="d-flex align-items-center gap-3"><span class="avatar-circle avatar-light"><i class="bi bi-person-fill"></i></span><div><strong class="d-block">{{ oferta.passageiro.pessoa.nome }}</strong><span class="text-secondary"><i class="bi bi-telephone me-1"></i>{{ oferta.passageiro.pessoa.conta.telefone }}</span><div class="small text-secondary"><i class="bi bi-clock-history me-1"></i>Solicitado em {{ oferta.data_reserva|datahora_br }}</div></div></div>
+        <div class="d-flex gap-2">
+          <form method="post" action="{{ url_for('driver.accept', reservation_id=oferta.id_reserva) }}">{{ action_form.hidden_tag() }}<button class="btn btn-success"><i class="bi bi-check-lg me-1"></i>Aceitar</button></form>
+          <form method="post" action="{{ url_for('driver.refuse', reservation_id=oferta.id_reserva) }}">{{ action_form.hidden_tag() }}<button class="btn btn-outline-danger"><i class="bi bi-x-lg me-1"></i>Recusar</button></form>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="p-5 text-center text-secondary"><i class="bi bi-inbox display-5 d-block mb-2"></i>Nenhuma solicitação pendente.</div>
+    {% endfor %}
+  </div>
+</div>
+
+{% if processadas %}
+<div class="card border-0 shadow-sm rounded-4">
+  <div class="card-header bg-white border-0 p-4"><h2 class="h5 fw-bold mb-0">Histórico de solicitações</h2></div>
+  <div class="table-responsive"><table class="table align-middle mb-0"><thead><tr><th>Passageiro</th><th>Telefone</th><th>Solicitação</th><th>Status</th></tr></thead><tbody>
+    {% for oferta in processadas %}<tr><td>{{ oferta.passageiro.pessoa.nome }}</td><td>{{ oferta.passageiro.pessoa.conta.telefone }}</td><td>{{ oferta.data_reserva|datahora_br }}</td><td><span class="badge {{ 'text-bg-success' if oferta.status == 'CONFIRMADO' else 'text-bg-secondary' }}">{{ oferta.status|title }}</span></td></tr>{% endfor %}
+  </tbody></table></div>
+</div>
+{% endif %}
+{% endblock %}

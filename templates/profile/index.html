@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% from "components/forms.html" import render_field %}
+{% block title %}Meu Perfil · Carona Alegre{% endblock %}
+{% block content %}
+<div class="page-heading mb-4"><span class="eyebrow">Sua conta</span><h1 class="display-6 fw-bold">Meu perfil</h1><p class="text-secondary">Mantenha seus dados de contato atualizados.</p></div>
+<div class="row g-4">
+  <div class="col-lg-7"><div class="card border-0 shadow-sm rounded-4"><div class="card-body p-4 p-lg-5"><div class="d-flex align-items-center gap-3 mb-4"><span class="profile-avatar"><i class="bi bi-person-fill"></i></span><div><h2 class="h4 fw-bold mb-0">{{ current_user.nome }}</h2><span class="text-secondary">{{ 'Motorista' if current_user.is_motorista else 'Passageiro' }}</span></div></div><form method="post" novalidate>{{ form.hidden_tag() }}{{ render_field(form.nome) }}<div class="row"><div class="col-md-6">{{ render_field(form.email) }}</div><div class="col-md-6">{{ render_field(form.telefone, '', 'phone-mask') }}</div></div>{{ form.submit(class="btn btn-primary") }}<a class="btn btn-outline-secondary ms-2" href="{{ url_for('profile.password') }}"><i class="bi bi-key me-1"></i>Alterar senha</a></form></div></div></div>
+  <div class="col-lg-5"><div class="card border-0 shadow-sm rounded-4"><div class="card-body p-4"><h2 class="h5 fw-bold">Dados protegidos</h2><p class="text-secondary small">Seu CPF é utilizado como identificador único e não pode ser alterado por esta tela.</p><div class="info-row"><span>CPF</span><strong>•••.•••.•••-••</strong></div><div class="info-row"><span>Tipo da conta</span><strong>{{ 'Motorista' if current_user.is_motorista else 'Passageiro' }}</strong></div></div></div></div>
+</div>
+{% if current_user.is_motorista %}
+<div class="card border-0 shadow-sm rounded-4 mt-4 overflow-hidden"><div class="card-header bg-white border-0 p-4 d-flex justify-content-between"><h2 class="h4 fw-bold mb-0">Veículos vinculados</h2><a href="{{ url_for('driver.vehicles') }}" class="btn btn-sm btn-outline-primary">Gerenciar</a></div><div class="table-responsive"><table class="table align-middle mb-0"><thead><tr><th>Veículo</th><th>Placa</th><th>Ano</th><th>Status</th></tr></thead><tbody>{% for veiculo in veiculos %}<tr><td>{{ veiculo.marca }} {{ veiculo.modelo }}</td><td>{{ veiculo.placa }}</td><td>{{ veiculo.ano }}</td><td><span class="badge {{ 'text-bg-success' if veiculo.ativo else 'text-bg-secondary' }}">{{ 'Ativo' if veiculo.ativo else 'Inativo' }}</span></td></tr>{% else %}<tr><td colspan="4" class="text-center py-4 text-secondary">Nenhum veículo cadastrado.</td></tr>{% endfor %}</tbody></table></div></div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% from "components/forms.html" import render_field, render_select %}
+{% block title %}Entrar · Carona Alegre{% endblock %}
+{% block content %}
+<div class="auth-wrapper">
+  <div class="row g-0 auth-card shadow-lg overflow-hidden">
+    <div class="col-lg-6 auth-hero d-none d-lg-flex flex-column justify-content-end p-5">
+      <div class="position-relative">
+        <span class="badge rounded-pill text-bg-warning mb-3">Mobilidade colaborativa</span>
+        <h1 class="display-5 fw-bold text-white">Sua próxima carona começa aqui.</h1>
+        <p class="lead text-white-50 mb-0">Encontre trajetos, compartilhe vagas e viaje por Alegre de forma simples.</p>
+      </div>
+    </div>
+    <div class="col-lg-6 bg-white p-4 p-md-5">
+      <div class="mb-4">
+        <h2 class="fw-bold mb-1">Bem-vindo de volta</h2>
+        <p class="text-secondary">Acesse sua conta para continuar.</p>
+      </div>
+      <form method="post" novalidate>
+        {{ form.hidden_tag() }}
+        {{ render_field(form.email, 'nome@exemplo.com') }}
+        {{ render_field(form.senha, 'Sua senha') }}
+        {{ render_select(form.lembrar) }}
+        {{ form.submit(class="btn btn-primary w-100 btn-lg") }}
+      </form>
+      <p class="text-center text-secondary mt-4 mb-0">Ainda não possui conta? <a href="{{ url_for('auth.register') }}" class="fw-semibold">Cadastre-se</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}

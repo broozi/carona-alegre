@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% from "components/forms.html" import render_field %}
+{% block title %}Editar Veículo · Carona Alegre{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-lg-7">
+  <div class="page-heading mb-4"><span class="eyebrow">Garagem</span><h1 class="display-6 fw-bold">Editar veículo</h1><p class="text-secondary">{{ veiculo.descricao }}</p></div>
+  <div class="card border-0 shadow-sm rounded-4"><div class="card-body p-4 p-lg-5">
+    <form method="post" novalidate>
+      {{ form.hidden_tag() }}
+      <div class="row"><div class="col-md-6">{{ render_field(form.marca) }}</div><div class="col-md-6">{{ render_field(form.modelo) }}</div></div>
+      <div class="row"><div class="col-md-6">{{ render_field(form.cor) }}</div><div class="col-md-6">{{ render_field(form.ano) }}</div></div>
+      <div class="row"><div class="col-md-6">{{ render_field(form.placa, '', 'plate-mask') }}</div><div class="col-md-6">{{ render_field(form.capacidade) }}</div></div>
+      <div class="d-flex gap-2">{{ form.submit(class="btn btn-primary") }}<a href="{{ url_for('driver.vehicles') }}" class="btn btn-outline-secondary">Cancelar</a></div>
+    </form>
+  </div></div>
+</div></div>
+{% endblock %}

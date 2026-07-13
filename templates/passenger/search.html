@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% from "components/forms.html" import render_field, render_select %}
+{% block title %}Pesquisar Carona · Carona Alegre{% endblock %}
+{% block content %}
+<div class="page-heading mb-4"><span class="eyebrow">Encontre seu trajeto</span><h1 class="display-6 fw-bold">Pesquisar caronas</h1><p class="text-secondary">Mostramos apenas viagens futuras, disponíveis e com vagas restantes.</p></div>
+<div class="card border-0 shadow-sm rounded-4 mb-4"><div class="card-body p-4"><form method="post" class="row g-3 align-items-end" novalidate>{{ form.hidden_tag() }}<div class="col-md-4">{{ render_select(form.origem) }}</div><div class="col-md-4">{{ render_select(form.destino) }}</div><div class="col-md-2">{{ render_field(form.data) }}</div><div class="col-md-2 mb-3">{{ form.submit(class="btn btn-primary w-100") }}</div></form></div></div>
+
+<div class="d-flex justify-content-between align-items-center mb-3"><h2 class="h4 fw-bold mb-0">Caronas disponíveis</h2><span class="text-secondary">{{ caronas|length }} resultado(s)</span></div>
+{% if caronas %}
+<div class="row g-4">
+  {% for carona in caronas %}
+  <div class="col-md-6 col-xl-4"><article class="card ride-card search-card h-100 border-0 shadow-sm"><div class="card-body p-4 d-flex flex-column">
+    <div class="d-flex align-items-center gap-2 mb-3"><span class="avatar-circle avatar-light"><i class="bi bi-person-fill"></i></span><div><small class="text-secondary d-block">Motorista</small><strong>{{ carona.motorista.pessoa.nome }}</strong></div></div>
+    <div class="route-line mb-4"><div class="route-point origin"><span></span><div><small>Origem</small><strong>{{ carona.trecho.origem.nome_local }}</strong></div></div><div class="route-point destination"><span></span><div><small>Destino</small><strong>{{ carona.trecho.destino.nome_local }}</strong></div></div></div>
+    <div class="row g-2 ride-meta mb-4"><div class="col-6"><i class="bi bi-calendar3"></i><span>{{ carona.data_saida|data_br }}</span></div><div class="col-6"><i class="bi bi-clock"></i><span>{{ carona.horario_saida|hora_br }}</span></div><div class="col-12"><i class="bi bi-car-front"></i><span>{{ carona.veiculo.descricao }}</span></div><div class="col-12"><i class="bi bi-people"></i><span>{{ carona.vagas_restantes }} vaga(s) restante(s)</span></div></div>
+    <form method="post" action="{{ url_for('passenger.request', ride_id=carona.id_carona) }}" class="mt-auto">{{ action_form.hidden_tag() }}<button class="btn btn-primary w-100" type="submit"><i class="bi bi-send me-2"></i>Solicitar Carona</button></form>
+  </div></article></div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state card border-0 shadow-sm text-center p-5"><i class="bi bi-search"></i><h2 class="h4 mt-3">Nenhuma carona encontrada</h2><p class="text-secondary mb-0">Tente alterar os filtros ou pesquisar novamente mais tarde.</p></div>
+{% endif %}
+{% endblock %}

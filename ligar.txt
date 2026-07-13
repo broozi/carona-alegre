@@ -1,0 +1,43 @@
+@echo off
+echo ====================================================
+echo   CONFIGURANDO E INICIANDO O CARONA ALEGRE
+echo ====================================================
+echo.
+
+:: Verifica se a pasta .venv existe. Se existir, pula a instalacao.
+if exist .venv goto :AVANCAR
+if exist venv goto :AVANCAR_SEM_PONTO
+
+echo [!] Ambiente virtual nao encontrado. Criando um novo...
+python -m venv .venv
+echo [+] Ativando novo ambiente...
+call .venv\Scripts\activate.bat
+echo [+] Instalando dependencias (isso pode levar um minutinho)...
+pip install -r requirements.txt
+goto :RODAR_BANCO
+
+:AVANCAR_SEM_PONTO
+echo [+] Pasta venv encontrada! Ativando ambiente...
+call venv\Scripts\activate.bat
+goto :RODAR_BANCO
+
+:AVANCAR
+echo [+] Pasta .venv encontrada! Ativando ambiente...
+call .venv\Scripts\activate.bat
+
+:RODAR_BANCO
+echo.
+:: Valida e cria o Banco de Dados
+echo [+] Verificando e estruturando o banco de dados SQLite...
+flask --app app check-db
+echo.
+
+:: Inicializa o servidor web
+echo ====================================================
+echo   SERVIDOR INICIADO! 
+echo   Acesse no navegador: http://127.0.0.1:5000
+echo ====================================================
+echo.
+flask --app app run --debug
+
+pause
