@@ -1,0 +1,30 @@
+ --taxa de quantidade de ocupacao
+SELECT
+    c.idCarona,
+    p.nome AS motorista,
+    v.capacidade,
+    COUNT(r.idReserva) AS passageiros,
+    ROUND((COUNT(r.idReserva) / v.capacidade) * 100, 2) as Quantidade_ocupacao
+FROM Carona c
+JOIN Veiculo v ON c.idVeiculo = v.idVeiculo
+JOIN Motorista m ON c.idMotorista = m.idMotorista
+JOIN Pessoa p ON m.idMotorista = p.idPessoa
+LEFT JOIN Reserva r ON c.idCarona = r.idCarona
+GROUP BY c.idCarona, p.nome, v.capacidade;
+
+
+
+----------------------------------------------
+--locais mais utilizados como destino
+SELECT
+    l.nomeLocal,
+    COUNT(*) AS quantidade_chegadas
+FROM Trecho t
+JOIN Local l ON t.idLocalDestino = l.idLocal
+GROUP BY l.nomeLocal
+ORDER BY quantidade_chegadas DESC;
+
+
+
+
+--------------------------------------------------
